@@ -1,3 +1,5 @@
+import csv
+
 class Item:
   pay_rate = 0.8 # The pay rate after 20% discount
   all = []
@@ -22,8 +24,20 @@ class Item:
     # self.pay_rate is accessible at instance level. Otherwise, it is accessible at class level
     self.price = self.price * self.pay_rate
 
-  def instantiate_from_csv(self):
-    pass
+  @classmethod
+  def instantiate_from_csv(cls):
+    with open('items.csv', 'r') as f:
+      reader = csv.DictReader(f)
+      items = list(reader)
+    
+    for item in items:
+      # print(item)
+      Item(
+        name = item['name'], # or item.get('name')
+        price = float(item['price']), # or float(item.get('price'))
+        quantity = int(item['quantity']) # or int(item.get('quantity'))
+      )
+    # print(items)
 
   def __repr__(self):
     return f'Item("{self.name}", {self.price}, {self.quantity})'
@@ -39,3 +53,6 @@ class Item:
 #   print(instance.name)
 
 Item.instantiate_from_csv()
+print(Item.all)
+# for instance in Item.all:
+#   print(instance)
