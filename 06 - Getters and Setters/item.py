@@ -9,12 +9,36 @@ class Item:
     assert quantity >= 0, f'Quantity {quantity} is not greater than or equal to zero!'
 
     # Assign to self object
-    self.name = name
+    self._name = name # single underscore is pythonic way for us to set a property as an assignable attribute.
+    # Otherwise, self.name cannot be set because name is already a property
+    # We need to set self._name under the property decorator too.
+    # Therefore, self._name is writable but self.name is read-only
+    # self.__name # a double-underscored attribute that is entirely inaccessible outside of the class
+    # aka private keys
     self.price = price
     self.quantity = quantity
 
     # Actions to execute
     Item.all.append(self)
+
+  @property
+  # Property Decorator = Read-Only Attribute
+  def name(self):
+    # print('You are trying to get name')
+    return self._name
+  
+  @name.setter
+  # changes a read-only attribute to a settable attribute
+  # we should always receive a paramter in the setter,
+  # because the value that is assigned in main.py becomes the argument in the setter.
+  # With setters, we can implement if-else conditions or raise exceptions if we don't like the value that we receive
+  def name(self, value):
+    # print('You are trying to set name')
+    self._name = value
+    # if len(value) > 20:
+    #   raise Exception('The name is too long!')
+    # else:
+    #   self._name = value
 
   def calculate_total_price(self):
     return self.price * self.quantity
@@ -54,3 +78,7 @@ class Item:
   def __repr__(self):
     # return f'Item("{self.name}", {self.price}, {self.quantity})'
     return f'{self.__class__.__name__}("{self.name}", {self.price}, {self.quantity})'
+
+  # @property # decorator for read only attributes aka properties
+  # def read_only_name(self):
+  #   return 'AAA'
